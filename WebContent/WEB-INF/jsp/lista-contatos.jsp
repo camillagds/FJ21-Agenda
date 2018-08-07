@@ -11,7 +11,6 @@
 </head>
 <body>
 	<!-- cria o DAO -->
-	<jsp:useBean id="dao" class="br.com.caelum.agenda.dao.ContatoDao" />
 	<c:import url="cabecalho.jsp"></c:import>
 	<table border="1">
 		<tr bgcolor="#CCE5FF">
@@ -20,7 +19,7 @@
 			<th>Endereço</th>
 			<th>Data Nascimento</th>
 		</tr>
-		<c:forEach var="contato" items="${dao.lista}" varStatus="id">
+		<c:forEach var="contato" items="${contatos}" varStatus="id">
 			<tr bgcolor="#${id.count % 2 == 0 ? 'aaee88' : 'ffffff' }">
 				<td>${contato.nome}</td>
 				<td><c:choose>
@@ -32,6 +31,7 @@
 				<td>${contato.endereco}</td>
 				<td><fmt:formatDate value="${contato.dataNascimento.time}"
 						pattern="dd/MM/yyyy" /></td>
+				<td><a href="mvc?logica=MostraContatoLogic&id=${contato.id}">Alterar</a></td>
 				<td><a href="mvc?logica=RemoveContatoLogic&id=${contato.id}">Remover</a></td>
 			</tr>
 		</c:forEach>

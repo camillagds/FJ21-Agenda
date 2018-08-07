@@ -22,6 +22,10 @@ public class ContatoDao {
 			throw new RuntimeException(e);
 		}
 	}
+	
+	public ContatoDao(Connection connection){
+		this.connection = connection;
+	}
 
 	public void adiciona(Contato contato) {
 		try {
@@ -98,5 +102,34 @@ public class ContatoDao {
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
+	}
+	
+	public Contato seleciona(Long id) {
+		String sql = "select * from contatos where id = ?";
+		Contato contato = new Contato();
+
+		try {
+			PreparedStatement stmt = this.connection.prepareStatement(sql);
+			stmt.setLong(1, id);
+			ResultSet rs = stmt.executeQuery();
+			
+			while(rs.next()) {
+				//popula o objeto contato
+				contato.setId(rs.getLong("id"));
+				contato.setNome(rs.getString("nome"));
+				contato.setEmail(rs.getString("email"));
+				contato.setEndereco(rs.getString("endereco"));
+
+				//popula a data de nascimento do contato, fazendo a conversao
+				Calendar data = Calendar.getInstance();
+				data.setTime(rs.getDate("dataNascimento"));
+				contato.setDataNascimento(data);
+
+				//adiciona o contato na lista
+			}
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+		return contato;
 	}
 }
